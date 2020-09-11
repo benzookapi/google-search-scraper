@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Google Search Scraper</title>  
+</head>
+<body>
+
+  <form action="/" method="POST">
+    <label for="query">Query</label>
+    <input type="text" value="site:thebase.in" name="query" />
+    <label for="path"></label>
+    <input type="text" value="law" name="path" />
+    <label for="regex"></label>
+    <input type="text" value="^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$" name="regex" />
+    <input type="submit" value="Search & Crawl"/>  
+  </form>
+
+  <%= res %>
+
+</body>
+</html>
