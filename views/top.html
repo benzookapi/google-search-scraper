@@ -5,18 +5,66 @@
   <title>Google Search Scraper</title>  
 </head>
 <body>
+<div style="margin:0 auto;">
+  <pre style="padding: 0 0 0 30%;">
+    <h1>Google Search Scraper</h1>
+    "Query" is the search query for Google search.
+    "Path" is the sub path to add to each hit URL (https://xxx.com -> https://xxx.com/path).
+    "Regex" is the regular expression for getting data from each hit page (the default one is for email address).
+  </pre>
+  <form action="/" method="POST" >
+    <div style="width:30%; text-align: right; margin-bottom: 1%; float:left;">
+      <label for="query">Query:</label>      
+    </div>
+    <div style="margin-bottom: 1%;">
+      <input type="text" value="<%= query %>" name="query" style="width:30%;"/>      
+    </div>
+    <div style="width:30%; text-align: right; margin-bottom: 1%; float:left;">
+      <label for="path">Path:</label>
+    </div>
+    <div style="margin-bottom: 1%;">
+      <input type="text" value="<%= path %>" name="path" style="width:10%;" />
+    </div>
+    <div style="width:30%; text-align: right; margin-bottom: 1%; float:left;">
+      <label for="regex">Regex:</label>
+    </div>
+    <div style="margin-bottom: 1%;">
+      <input type="text" value="<%= regex %>" name="regex" style="width:50%;"/>
+    </div>
+    <div style="text-align: center;">
+      <input type="submit" value="Search & Crawl"/>  
+    </div>
 
-  <form action="/" method="POST">
-    <label for="query">Query</label>
-    <input type="text" value="site:thebase.in" name="query" />
-    <label for="path"></label>
-    <input type="text" value="law" name="path" />
-    <label for="regex"></label>
-    <input type="text" value="^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$" name="regex" />
-    <input type="submit" value="Search & Crawl"/>  
+    <p style="text-align: center;"><a href="https://www.google.com/search?q=<%= query %>" target="_blank">Original search</a></p>
+   
   </form>
+</div>
 
-  <%= res %>
-
+<div style="margin:0 auto;">
+  <p style="text-align: center;">Result of <%= tag %>:</p>
+  <p id="result" style="text-align: center; font-weight: bold; font-size: x-large;"></p>
+  <div style="text-align: center; margin-bottom: 1%;">
+    <input type="button" value="Refresh" onclick="check_result();" />  
+  </div>
+  <div style="text-align: center;">
+    <input type="button" value="download as CSV" onclick="check_result();" />  
+  </div>
+  <div style="text-align: center; margin-top: 10%;">
+    <p>&copy; @benzookapi</p>
+  </div>
+</div>
+<script>
+  var check_result = function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {       
+        document.getElementById("result").innerHTML = xhttp.responseText;
+      }
+    };
+    xhttp.open("GET", "/result?tag=<%= tag %>", true);
+    xhttp.send();
+  };
+  check_result();
+</script>
 </body>
 </html>
