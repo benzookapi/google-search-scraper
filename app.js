@@ -94,7 +94,7 @@ router.post('/',  async (ctx, next) => {
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
       console.log(`=== URL ERROR[tag: ${tag}]: ${url} is not accessible.`);
-      //return resolve(JSON.stringify({ "url": url, "data": ''}));
+      return null;
     }));
     return yield promises;    
   });  
@@ -105,6 +105,7 @@ router.post('/',  async (ctx, next) => {
     crawl(start).then(r => {
       console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
       for (const ret of r) {
+        if (r == null) continue;
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
