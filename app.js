@@ -39,6 +39,7 @@ const MONGO_DB_NAME = `${process.env.MY_MONGO_DB_NAME}`;
 const MONGO_COLLECTION = 'googlesearchscraper';
 
 const SEARCH_URL = 'https://www.google.com/search';
+const MAX_COUNT = 50;
 
 router.get('/',  async (ctx, next) => {  
   console.log("+++++++++ / ++++++++++");
@@ -97,6 +98,8 @@ router.post('/',  async (ctx, next) => {
     return yield promises;    
   });  
 
+  let count = 0;
+
   const crawlAll = function(start) {
     crawl(start).then(r => {
       console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
@@ -104,6 +107,13 @@ router.post('/',  async (ctx, next) => {
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
+      }
+
+      count = count + 1;
+
+      if (count > MAX_COUNT) {
+        console.log(`=== STOP[[tag: ${tag}]]: The count exceeded the maximum ${MAX_COUNT}`);
+        return;
       }
 
       crawlAll(start + 10);    
