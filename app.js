@@ -39,7 +39,7 @@ const MONGO_DB_NAME = `${process.env.MY_MONGO_DB_NAME}`;
 const MONGO_COLLECTION = 'googlesearchscraper';
 
 const SEARCH_URL = 'https://www.google.com/search';
-const MAX_COUNT = 10;
+const MAX_COUNT = parseInt(`${process.env.MY_MAX_COUNT}`);
 
 router.get('/',  async (ctx, next) => {  
   console.log("+++++++++ / ++++++++++");
