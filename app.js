@@ -161,6 +161,7 @@ router.get('/csv',  async (ctx, next) => {
   let csv = "";
   csv = (`url,data\n`);
   for (const r of res) {
+    console.log(`${r}`);
     csv = csv + `${r.url},${r.data}\n`;
   }
 
