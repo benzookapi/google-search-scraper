@@ -89,9 +89,13 @@ router.post('/',  async (ctx, next) => {
     console.log(JSON.stringify(`=== URLS[tag: ${tag}]: ${JSON.stringify(urls)}`));
     if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
-      let data = r.match(regex);
+      let found = r.matchAll(regex);
+      console.log(`=== FOUND[tag: ${tag}]: ${found}`);
+      let data = "";
+      for (const f of found) {
+         data = data + f.toString().replace(',', ' ');
+      }
       console.log(`=== DATA[tag: ${tag}]: ${data}`);
-      if (data != null) data = data[0];
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
       console.log(`=== URL ERROR[tag: ${tag}]: ${url} is not accessible.`);
@@ -198,7 +202,7 @@ const findDB = function(tag, withData = false) {
     //console.log(`getDB Used ${MONGO_DB_NAME}`);
     console.log(`getDB find, tag:${tag}`);
     let q = {"tag": `${tag}`};
-    if (withData) q['data.data'] = { $ne: null };
+    if (withData) q['data.data'] = { $ne: "" };
     dbo.collection(MONGO_COLLECTION).find(q, {"projection": {"_id":0, "tag":1, "data":1}}).toArray().then(function(res){
       db.close();
       if (res == null) return resolve(null);
