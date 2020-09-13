@@ -47,7 +47,7 @@ router.get('/',  async (ctx, next) => {
   await ctx.render('top', {
     query: 'site:thebase.in',
     path: 'law',
-    regex: '[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}',
+    regex: '[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_-]{1,}\.[A-Za-z0-9]{1,}(\.[A-Za-z0-9]{1,})?',
     start: 0,
     tag: ''
   });  
