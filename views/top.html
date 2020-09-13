@@ -67,7 +67,8 @@
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {       
-        document.getElementById("result").innerHTML = xhttp.responseText;
+        let r = JSON.parse(xhttp.responseText);
+        document.getElementById("result").innerHTML = `Scraped URLs: ${r.all_count}<br/>Data found: ${r.data_count}`;
       }
     };
     xhttp.open("GET", "/result?tag=<%= tag %>", true);

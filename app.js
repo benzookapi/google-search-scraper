@@ -141,10 +141,14 @@ router.get('/result',  async (ctx, next) => {
 
   const tag = ctx.request.query.tag;  
 
-  const res = await(findDB(tag));
+  const resAll = await(findDB(tag));
+  const res = await(findDB(tag, true));
 
   ctx.set('Content-Type','text/plain');
-  ctx.body = `${res.length}`;  
+  ctx.body = JSON.stringify({
+    "all_count": resAll.length,
+    "data_count": res.length
+  });
 });
 
 const generateTag = function (){
@@ -168,13 +172,15 @@ const insertDB = function(tag, data) {
   });});
 };
 
-const findDB = function(tag) {
+const findDB = function(tag, withData = false) {
   return new Promise(function(resolve, reject) { mongo.MongoClient.connect(MONGO_URL).then(function(db){
     //console.log(`getDB Connected ${MONGO_URL}`);
     var dbo = db.db(MONGO_DB_NAME);    
     //console.log(`getDB Used ${MONGO_DB_NAME}`);
     console.log(`getDB find, tag:${tag}`);
-    dbo.collection(MONGO_COLLECTION).find({"tag": `${tag}`}, {"projection": {"_id":0, "tag":1, "data":1}}).toArray().then(function(res){
+    let q = {"tag": `${tag}`};
+    if (withData) q.data = { $ne: "" };
+    dbo.collection(MONGO_COLLECTION).find(q, {"projection": {"_id":0, "tag":1, "data":1}}).toArray().then(function(res){
       db.close();
       if (res == null) return resolve(null);
       return resolve(res);
