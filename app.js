@@ -47,6 +47,7 @@ router.get('/',  async (ctx, next) => {
     query: 'site:thebase.in',
     path: 'law',
     regex: '[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}',
+    start: 0,
     tag: ''
   });  
 });
@@ -59,11 +60,12 @@ router.post('/',  async (ctx, next) => {
   const query = ctx.request.body.query;
   const path = ctx.request.body.path;  
   const regex = new RegExp(ctx.request.body.regex);
+  const start = parseInt(ctx.request.body.start);
 
-  console.log(`=== PARAMS[tag: ${tag}]: query ${query} path ${path} regex ${regex}`);  
+  console.log(`=== PARAMS[tag: ${tag}]: query ${query} path ${path} regex ${regex} start ${start}`);  
 
   const crawl = co.wrap(function*(start) {
-    console.log(`=== SEARCH URL[tag: ${tag}]: ${SEARCH_URL} q:${query} start:${start}`);
+    console.log(`=== SEARCH URL[tag: ${tag}]: ${SEARCH_URL} q ${query} start ${start}`);
     const res =  yield ctx.get(SEARCH_URL, {"q": query, "start": `${start}`}).then(r => resolve(r));
     const hrefRegex = /[^<]*(<a href="([^"]+)">)/g;
     //console.log(`=== RES: ${res}`);
@@ -103,18 +105,20 @@ router.post('/',  async (ctx, next) => {
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
       }
+
       crawlAll(start + 10);    
     }).catch(e => {
       console.log(`EROOR[tag: ${tag}]: ${e}`);
     });
   }
 
-  crawlAll(0);
+  crawlAll(start);
 
   await ctx.render('top', {
     query: query,
     path: path,
     regex: regex,
+    start: start,
     tag: tag
   });
   
