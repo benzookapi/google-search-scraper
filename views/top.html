@@ -11,7 +11,22 @@
     "Query" is the search query for Google search.
     "Path" is the sub path to add to each hit URL (https://xxx.com -> https://xxx.com/path).
     "Regex" is the regular expression for getting data from each hit page (the default one is for email address).
-    "Start" is the page number of starting search (0 by default means from the first page, for the page 2, set 10, for 3, 20, ...).
+    "Start" is the index of starting record of search result (1 by default means starting at the first record hit by search).
+
+    "Search & Crawl" starts google search with the input aobove and crawl each hit site to scrape and 
+      get its target data based on regex. Note that this process does paging the search result based on the 
+      maximum number described below, so you might not have the all data with one execution. 
+      You may get the all data with multiple execution shifting "Start". See the details in the best practice below.
+
+    "Refresh" shows the latest stats of scraping on how many sites accessed and have the target data. 
+      We refresh automatically per minute and if you have no changes on the number, 
+      that means the scraping has ended for the current execution.
+
+    "Downalod CSV" saves the CSV file of the current execution result with hit URLs and their data 
+      (The URLs with no data found are not included). 
+    <h2>Best practice</h2>
+    Currently the maximum number of search paging is set <%= count %> and each page has 10 records, 
+    so increasing "Start" by <%= count * 10 %> after each search & crawl will provide all data for huge hit.
   </pre>
   <form action="/" method="POST" >
     <div style="width:30%; text-align: right; margin-bottom: 1%; float:left;">

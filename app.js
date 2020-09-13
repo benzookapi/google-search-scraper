@@ -49,8 +49,9 @@ router.get('/',  async (ctx, next) => {
     query: 'site:thebase.in',
     path: 'law',
     regex: '[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_-]{1,}\.[A-Za-z0-9]{1,}(\.[A-Za-z0-9]{1,})?',
-    start: 0,
-    tag: ''
+    start: 1,
+    tag: '',
+    count: MAX_COUNT
   });  
 });
 
@@ -131,7 +132,8 @@ router.post('/',  async (ctx, next) => {
     path: path,
     regex: ctx.request.body.regex,
     start: start,
-    tag: tag
+    tag: tag,
+    count: MAX_COUNT
   });
   
 });
