@@ -127,7 +127,7 @@ router.post('/',  async (ctx, next) => {
   await ctx.render('top', {
     query: query,
     path: path,
-    regex: regex,
+    regex: ctx.request.body.regex,
     start: start,
     tag: tag
   });
