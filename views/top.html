@@ -84,7 +84,7 @@
         
         var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xhttp.responseText));
-  element.setAttribute('download', 'scraping_result_<%= tag %>.csv');
+  element.setAttribute('download', 'scraping_result_<%= start %>_<%= tag %>.csv');
 
   element.style.display = 'none';
   document.body.appendChild(element);
