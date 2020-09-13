@@ -94,6 +94,7 @@ router.post('/',  async (ctx, next) => {
       for (const f of found) {
          data = data + f.toString().replace(',', ' ');
       }
+      data = data.trim();
       console.log(`=== DATA[tag: ${tag}]: ${data}`);
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
@@ -110,8 +111,8 @@ router.post('/',  async (ctx, next) => {
       console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
       for (const ret of r) {
         if (ret == null) continue;
-        console.log(`DDDDDDDDDD  ${typeof ret}`);
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
+        d.url = d.url.replace(/(https?):\/([^\/])/g, `$1://$2`);
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
       }
