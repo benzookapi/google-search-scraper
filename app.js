@@ -163,7 +163,7 @@ router.get('/csv',  async (ctx, next) => {
 
   const tag = ctx.request.query.tag;  
 
-  const res = await(findDB(tag, true));
+  const res = await(findDB(tag));
 
   let csv = "";
   csv = (`url,data\n`);
