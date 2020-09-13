@@ -38,6 +38,8 @@ const MONGO_URL = `${process.env.MY_MONGO_URL}`;
 const MONGO_DB_NAME = `${process.env.MY_MONGO_DB_NAME}`;
 const MONGO_COLLECTION = 'googlesearchscraper';
 
+const SEARCH_URL = 'https://www.google.com/search';
+
 router.get('/',  async (ctx, next) => {  
   console.log("+++++++++ / ++++++++++");
 
@@ -59,10 +61,11 @@ router.post('/',  async (ctx, next) => {
 
   const tag = generateTag();
 
-  co(function*() {
-    const res =  yield ctx.get(`https://www.google.com/search`, {"q": query, "start": "0"}).then(r => resolve(r));
+  const crawl = co.wrap(function*(start) {
+    console.log(`=== SEARCH URL: ${SEARCH_URL} q:${query} start:${start}`);
+    const res =  yield ctx.get(SEARCH_URL, {"q": query, "start": `${start}`}).then(r => resolve(r));
     const hrefRegex = /[^<]*(<a href="([^"]+)">)/g;
-    console.log(`=== RES: ${res}`);
+    //console.log(`=== RES: ${res}`);
     const urls = [];
     const anchors = res.matchAll(hrefRegex);
     for (const anchor of anchors) {
@@ -79,7 +82,7 @@ router.post('/',  async (ctx, next) => {
       }
     }
     console.log(JSON.stringify(`=== URLS: ${JSON.stringify(urls)}`));
-    if (urls.length == 0) return null;
+    if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
       let data = r.match(regex);
       console.log(`=== DATA: ${data}`);
@@ -88,16 +91,24 @@ router.post('/',  async (ctx, next) => {
     }).catch(e => {
       return resolve(JSON.stringify({ "url": url, "data": ''}));
     }));
-    return yield promises;
-    
-  }).then(r => {
-    console.log(`SUCCESS: ${JSON.stringify(r)}`);
-    for (const ret of r) {
-      const d = JSON.parse(ret.substring(ret.indexOf('{')));
-      console.log(`RET: ${JSON.stringify(d)}`);
-      insertDB(tag, d);
-    }    
-  }).catch(e => console.log(`EROOR: ${e}`));
+    return yield promises;    
+  });  
+
+  const crawlAll = function(start) {
+    crawl(start).then(r => {
+      console.log(`SUCCESS: ${JSON.stringify(r)}`);
+      for (const ret of r) {
+        const d = JSON.parse(ret.substring(ret.indexOf('{')));
+        console.log(`RET: ${JSON.stringify(d)}`);
+        insertDB(tag, d);
+      }
+      crawlAll(start + 10);    
+    }).catch(e => {
+      console.log(`EROOR: ${e}`);
+    });
+  }
+
+  crawlAll(0);
 
   await ctx.render('top', {
     query: query,
