@@ -15,6 +15,7 @@ const co = require('co');
 
 const { resolve } = require('path');
 const { reject } = require('underscore');
+const { POINT_CONVERSION_COMPRESSED } = require('constants');
 
 const router = new Router();
 const app = module.exports = new Koa();
@@ -149,6 +150,23 @@ router.get('/result',  async (ctx, next) => {
     "all_count": resAll.length,
     "data_count": res.length
   });
+});
+
+router.get('/csv',  async (ctx, next) => {  
+  console.log("+++++++++ /csv ++++++++++");
+
+  const tag = ctx.request.query.tag;  
+
+  const res = await(findDB(tag, true));
+
+  let csv = "";
+  csv = (`url,data\n`);
+  for (r of res) {
+    csv = csv + `${r.url},${r.data}\n`;
+  }
+
+  ctx.set('Content-Type','text/plain');
+  ctx.body = csv;
 });
 
 const generateTag = function (){

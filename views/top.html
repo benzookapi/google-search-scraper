@@ -55,7 +55,7 @@
     <input type="button" value="Refresh" onclick="check_result();" />  
   </div>
   <div style="text-align: center;">
-    <input type="button" value="download as CSV" onclick="check_result();" />  
+    <input type="button" value="download as CSV" onclick="download_csv();" />  
   </div>
   <div style="text-align: center; margin-top: 10%;">
     <p>&copy; @benzookapi</p>
@@ -75,6 +75,27 @@
     xhttp.send();
   };
   check_result();
+
+  var download_csv = function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {       
+        
+        var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xhttp.responseText));
+  element.setAttribute('download', 'scraping_result_<%= tag %>.csv');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+      }
+    };
+    xhttp.open("GET", "/csv?tag=<%= tag %>", true);
+    xhttp.send();
+  };
 </script>
 </body>
 </html>
