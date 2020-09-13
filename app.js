@@ -81,7 +81,6 @@ router.post('/',  async (ctx, next) => {
           let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `$1://$2`);
           url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
-          //url = 'https://getabaco.thebase.in/law';
           console.log(`=== URL[tag: ${tag}]: ${url}`);
           urls.push(url);
       }
@@ -197,7 +196,7 @@ const findDB = function(tag, withData = false) {
     //console.log(`getDB Used ${MONGO_DB_NAME}`);
     console.log(`getDB find, tag:${tag}`);
     let q = {"tag": `${tag}`};
-    if (withData) q.data = { $ne: "" };
+    if (withData) q.data = { $ne: null };
     dbo.collection(MONGO_COLLECTION).find(q, {"projection": {"_id":0, "tag":1, "data":1}}).toArray().then(function(res){
       db.close();
       if (res == null) return resolve(null);
