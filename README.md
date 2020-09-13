@@ -20,6 +20,6 @@ export **MY_MONGO_UR**L=YOUR_MONGO_DB_URL
 
 access http://localhost:3000
 
-# Any other help
+# Demo
 
-See the top page of the app.
+https://google-search-scraper.herokuapp.com
