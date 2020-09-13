@@ -77,7 +77,7 @@ router.post('/',  async (ctx, next) => {
       const href = anchor.toString().split(',')[2];
       console.log(`=== HREF[tag: ${tag}]: ${href}`);
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
-          let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `\\$1://$2`);
+          let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `$1://$2`);
           url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
           //url = 'https://getabaco.thebase.in/law';
@@ -105,7 +105,7 @@ router.post('/',  async (ctx, next) => {
     crawl(start).then(r => {
       console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
       for (const ret of r) {
-        if (r == null) continue;
+        if (ret == null) continue;
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
