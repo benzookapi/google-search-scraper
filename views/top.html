@@ -15,7 +15,8 @@
 
     "Search & Crawl" starts google search with the input aobove and crawl each hit URL to scrape and 
       get the target data based on "Regex". Note that this process does paging the search result based on the 
-      maximum number described below, so you might not have the all data with one execution. 
+      maximum number described below, so you might not have the all data with one execution 
+      (This is fror preventing from the code 429, as known as too many request error).
       You may get the all data with multiple execution shifting "Start". See the details in the best practice below.
 
     "Refresh" shows the latest stats of scraping on how many URLs accessed and have the target data. 
