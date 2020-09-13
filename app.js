@@ -110,7 +110,7 @@ router.post('/',  async (ctx, next) => {
       console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
       for (const ret of r) {
         if (ret == null) continue;
-        console.log(`DDDDDDDDDD  ${typeof r}`);
+        console.log(`DDDDDDDDDD  ${typeof ret}`);
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
         console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
