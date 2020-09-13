@@ -77,7 +77,9 @@ router.post('/',  async (ctx, next) => {
       const href = anchor.toString().split(',')[2];
       console.log(`=== HREF[tag: ${tag}]: ${href}`);
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
-          let url = href.replace('/url?q=','');
+          let url = href.replace('/url?q=','').replace(/(http[s]?):\/([^\/]+1)/, function(x) {
+           return `${x[1]}://${x[2]}`;
+          });
           url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
           //url = 'https://getabaco.thebase.in/law';
@@ -93,6 +95,7 @@ router.post('/',  async (ctx, next) => {
       if (data != null) data = data[0];
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
+      console.log(`=== URL ERROR[tag: ${tag}]: ${url} is not accessible.`);
       return resolve(JSON.stringify({ "url": url, "data": ''}));
     }));
     return yield promises;    
