@@ -161,8 +161,7 @@ router.get('/csv',  async (ctx, next) => {
   let csv = "";
   csv = (`url,data\n`);
   for (const r of res) {
-    console.log(`${r}`);
-    csv = csv + `${r.url},${r.data}\n`;
+    csv = csv + `${r.data.url},${r.data.data}\n`;
   }
 
   ctx.set('Content-Type','text/plain');
@@ -197,7 +196,7 @@ const findDB = function(tag, withData = false) {
     //console.log(`getDB Used ${MONGO_DB_NAME}`);
     console.log(`getDB find, tag:${tag}`);
     let q = {"tag": `${tag}`};
-    if (withData) q.data = { $ne: null };
+    if (withData) q['data.data'] = { $ne: null };
     dbo.collection(MONGO_COLLECTION).find(q, {"projection": {"_id":0, "tag":1, "data":1}}).toArray().then(function(res){
       db.close();
       if (res == null) return resolve(null);
