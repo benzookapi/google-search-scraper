@@ -77,11 +77,7 @@ router.post('/',  async (ctx, next) => {
       const href = anchor.toString().split(',')[2];
       console.log(`=== HREF[tag: ${tag}]: ${href}`);
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
-          let url = href.replace('/url?q=','').replace(/(http[s]?):\/([^\/]+1)/, function(x) {
-            console.log(`FFFFFFFFFFFFFFFFFFFFFFFFFFFFF${x[1]}`);
-            console.log(`GGGGGGGGGGGGGGGGGGGGGGGGGGGGG${x[2]}`);
-           return `${x[1]}://${x[2]}`;
-          });
+          let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `\\$1://$2`);
           url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
           //url = 'https://getabaco.thebase.in/law';
