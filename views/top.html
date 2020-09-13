@@ -10,15 +10,15 @@
     <h1>Google Search Scraper</h1>
     "Query" is the search query for Google search.
     "Path" is the sub path to add to each hit URL (https://xxx.com -> https://xxx.com/path).
-    "Regex" is the regular expression for getting data from each hit page (the default one is for email address).
-    "Start" is the index of starting record of search result (1 by default means starting at the first record hit by search).
+    "Regex" is the regular expression for getting data from each hit URL (the default one is for email address).
+    "Start" is the index of starting record of search result (1 by default means starting at the first record hit by the search).
 
-    "Search & Crawl" starts google search with the input aobove and crawl each hit site to scrape and 
+    "Search & Crawl" starts google search with the input aobove and crawl each hit URL to scrape and 
       get its target data based on regex. Note that this process does paging the search result based on the 
       maximum number described below, so you might not have the all data with one execution. 
       You may get the all data with multiple execution shifting "Start". See the details in the best practice below.
 
-    "Refresh" shows the latest stats of scraping on how many sites accessed and have the target data. 
+    "Refresh" shows the latest stats of scraping on how many URLs accessed and have the target data. 
       We refresh automatically per minute and if you have no changes on the number, 
       that means the scraping has ended for the current execution.
 
