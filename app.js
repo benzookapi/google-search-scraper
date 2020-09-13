@@ -96,7 +96,7 @@ router.post('/',  async (ctx, next) => {
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
       console.log(`=== URL ERROR[tag: ${tag}]: ${url} is not accessible.`);
-      return resolve(JSON.stringify({ "url": url, "data": ''}));
+      //return resolve(JSON.stringify({ "url": url, "data": ''}));
     }));
     return yield promises;    
   });  
