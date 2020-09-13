@@ -75,23 +75,20 @@
     xhttp.open("GET", "/result?tag=<%= tag %>", true);
     xhttp.send();
   };
-  check_result();
+
+  setTimeout(check_result, 1000*60);
 
   var download_csv = function() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {       
-        
+      if (this.readyState == 4 && this.status == 200) {        
         var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xhttp.responseText));
-  element.setAttribute('download', 'scraping_result_<%= start %>_<%= tag %>.csv');
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xhttp.responseText));
+        element.setAttribute('download', 'scraping_result_<%= start %>_<%= tag %>.csv');
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
       }
     };
     xhttp.open("GET", "/csv?tag=<%= tag %>", true);
