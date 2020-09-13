@@ -54,38 +54,39 @@ router.get('/',  async (ctx, next) => {
 router.post('/',  async (ctx, next) => {  
   console.log("+++++++++ / ++++++++++");
 
+  const tag = generateTag();
+
   const query = ctx.request.body.query;
   const path = ctx.request.body.path;  
   const regex = new RegExp(ctx.request.body.regex);
-  console.log(`query: ${query} path: ${path} regex: ${regex}`);
 
-  const tag = generateTag();
+  console.log(`=== PARAMS[tag: ${tag}]: query ${query} path ${path} regex ${regex}`);  
 
   const crawl = co.wrap(function*(start) {
-    console.log(`=== SEARCH URL: ${SEARCH_URL} q:${query} start:${start}`);
+    console.log(`=== SEARCH URL[tag: ${tag}]: ${SEARCH_URL} q:${query} start:${start}`);
     const res =  yield ctx.get(SEARCH_URL, {"q": query, "start": `${start}`}).then(r => resolve(r));
     const hrefRegex = /[^<]*(<a href="([^"]+)">)/g;
     //console.log(`=== RES: ${res}`);
     const urls = [];
     const anchors = res.matchAll(hrefRegex);
     for (const anchor of anchors) {
-      console.log(`=== ANCHOR: ${anchor}`);
+      console.log(`=== ANCHOR[tag: ${tag}]: ${anchor}`);
       const href = anchor.toString().split(',')[2];
-      console.log(`=== HREF: ${href}`);
+      console.log(`=== HREF[tag: ${tag}]: ${href}`);
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
           let url = href.replace('/url?q=','');
           url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
           //url = 'https://getabaco.thebase.in/law';
-          console.log(`=== URL: ${url}`);
+          console.log(`=== URL[tag: ${tag}]: ${url}`);
           urls.push(url);
       }
     }
-    console.log(JSON.stringify(`=== URLS: ${JSON.stringify(urls)}`));
+    console.log(JSON.stringify(`=== URLS[tag: ${tag}]: ${JSON.stringify(urls)}`));
     if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
       let data = r.match(regex);
-      console.log(`=== DATA: ${data}`);
+      console.log(`=== DATA[tag: ${tag}]: ${data}`);
       if (data != null) data = data[0];
       return resolve(JSON.stringify({ "url": url, "data": data}));
     }).catch(e => {
@@ -96,15 +97,15 @@ router.post('/',  async (ctx, next) => {
 
   const crawlAll = function(start) {
     crawl(start).then(r => {
-      console.log(`SUCCESS: ${JSON.stringify(r)}`);
+      console.log(`SUCCESS[tag: ${tag}]: ${JSON.stringify(r)}`);
       for (const ret of r) {
         const d = JSON.parse(ret.substring(ret.indexOf('{')));
-        console.log(`RET: ${JSON.stringify(d)}`);
+        console.log(`RET[tag: ${tag}]: ${JSON.stringify(d)}`);
         insertDB(tag, d);
       }
       crawlAll(start + 10);    
     }).catch(e => {
-      console.log(`EROOR: ${e}`);
+      console.log(`EROOR[tag: ${tag}]: ${e}`);
     });
   }
 
