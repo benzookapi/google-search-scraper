@@ -48,7 +48,7 @@ router.get('/',  async (ctx, next) => {
   await ctx.render('top', {
     query: 'site:thebase.in',
     path: 'law',
-    regex: '[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_-]{1,}\.[A-Za-z0-9]{1,}(\.[A-Za-z0-9]{1,})?',
+    regex: '[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}',
     start: 1,
     tag: '',
     count: MAX_COUNT
@@ -92,7 +92,7 @@ router.post('/',  async (ctx, next) => {
       const found = r.matchAll(regex);
       let data = "";
       for (const f of found) {
-         data = data + f.toString().replace(',', ' ');
+         data = data + f.toString().split(',')[0] + ' ';
       }
       data = data.trim();
       console.log(`=== DATA[tag: ${tag}]: ${data}`);

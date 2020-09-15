@@ -13,7 +13,7 @@
     "Regex" is the regular expression for getting data from each hit URL (the default one is for email address).
     "Start" is the index of starting record of search result (1 by default means starting at the first record hit by the search).
 
-    "Search & Crawl" starts google search with the input aobove and crawl each hit URL to scrape and 
+    "Search & Crawl" starts google search with the input above and crawl each hit URL to scrape and 
       get the target data based on "Regex". Note that this process does paging the search result based on the 
       maximum number described below, so you might not have the all data with one execution 
       (This is fror preventing from the code 429, as known as too many request error).
@@ -25,8 +25,9 @@
 
     "Downalod CSV" saves the CSV file of the current execution result with hit URLs and data.
     <h2>Best practice</h2>
-    Currently the maximum number of search paging is set <%= count %> and each page has 10 records, 
-    so increasing "Start" by <%= count * 10 %> after one eexcution may provide all data for huge results.
+    Currently the maximum number of search paging is set <%= count %> and each page has 10 records. 
+    Increment "Start" by <%= 10 + count * 10 %> after one excution may provide all data for huge results.
+    (1 -> <%= 1 + (10 + count * 10) %> -> <%= 1 + (10 + count * 10)*2 %> -> <%= 1 + (10 + count * 10)*3 %> ...)
   </pre>
   <form action="/" method="POST" >
     <div style="width:30%; text-align: right; margin-bottom: 1%; float:left;">
@@ -91,6 +92,7 @@
     xhttp.send();
   };
 
+  check_result();
   setTimeout(check_result, 1000*60);
 
   var download_csv = function() {
