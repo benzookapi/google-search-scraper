@@ -81,6 +81,7 @@ router.post('/',  async (ctx, next) => {
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
           let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `$1://$2`);
           url = url.substring(0, url.lastIndexOf('/'));
+          if (url.split('/').length > 3) url = url.substring(0, url.lastIndexOf('/'));
           url = `${url}/${path}`;
           console.log(`=== URL[tag: ${tag}]: ${url}`);
           urls.push(url);
