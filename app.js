@@ -75,9 +75,9 @@ router.post('/',  async (ctx, next) => {
     const urls = [];
     const anchors = res.matchAll(hrefRegex);
     for (const anchor of anchors) {
-      console.log(`=== ANCHOR[tag: ${tag}]: ${anchor}`);
+      //console.log(`=== ANCHOR[tag: ${tag}]: ${anchor}`);
       const href = anchor.toString().split(',')[2];
-      console.log(`=== HREF[tag: ${tag}]: ${href}`);
+      //console.log(`=== HREF[tag: ${tag}]: ${href}`);
       if (href.indexOf('/url?q=') == 0 && href.indexOf('google.com') == -1) {
           let url = href.replace('/url?q=','').replace(/(https?):\/([^\/])/g, `$1://$2`);
           url = url.substring(0, url.lastIndexOf('/'));
@@ -90,7 +90,6 @@ router.post('/',  async (ctx, next) => {
     console.log(JSON.stringify(`=== URLS[tag: ${tag}]: ${JSON.stringify(urls)}`));
     if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
-      //const page = r;
       const page = r.replace(/&#([0-9]{2,3});/g, function(s){return String.fromCharCode([ParseInt(s)]);});
       console.log(`=== PAGE: ${page}`);
       const found = page.matchAll(regex);
