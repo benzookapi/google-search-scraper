@@ -91,7 +91,7 @@ router.post('/',  async (ctx, next) => {
     if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
       const page = r.replace(/&#([0-9]{2,3});/g, function(s){return String.fromCharCode([ParseInt(s)]);});
-      console.log(page);
+      console.log(`=== PAGE: ${page}`);
       const found = page.matchAll(regex);
       let data = "";
       for (const f of found) {
