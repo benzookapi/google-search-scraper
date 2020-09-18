@@ -66,9 +66,12 @@
 
 <div style="margin:0 auto;">
   <p style="text-align: center;">Result of <%= tag %>:</p>
-  <p id="result" style="text-align: center; font-weight: bold; font-size: x-large;"></p>
+  <p id="result" style="text-align: center; font-weight: bold; font-size: x-large;">
+    Scraped URLs: <span id="total_count"></span><br/>
+    Data found: <span id="data_count"></span>
+  </p>
   <div style="text-align: center; margin-bottom: 1%;">
-    <input type="button" value="Refresh" onclick="check_result();" />  
+    <input type="button" value="Refresh" onclick="javascript:update=true;check_result();" />  
   </div>
   <div style="text-align: center;">
     <input type="button" value="download as CSV" onclick="download_csv();" />  
@@ -80,12 +83,22 @@
 </div>
 
 <script>
+  var update = true;
+  var t = null;
   var check_result = function() {
+    console.log(update);
+    if (!update) {
+      console.log('stopped.');
+      clearInterval(t);
+      return;
+    };
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {       
         let r = JSON.parse(xhttp.responseText);
-        document.getElementById("result").innerHTML = `Scraped URLs: ${r.all_count}<br/>Data found: ${r.data_count}`;
+        if (document.getElementById("total_count").innerHTML == `${r.all_count}`) update = false;
+        document.getElementById("total_count").innerHTML = `${r.all_count}`;
+        document.getElementById("data_count").innerHTML = `${r.data_count}`;   
       }
     };
     xhttp.open("GET", "/result?tag=<%= tag %>", true);
@@ -93,7 +106,7 @@
   };
 
   check_result();
-  setTimeout(check_result, 1000*60);
+  t = setInterval(check_result, 1000*6);
 
   var download_csv = function() {
     var xhttp = new XMLHttpRequest();
