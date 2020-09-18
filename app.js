@@ -90,7 +90,7 @@ router.post('/',  async (ctx, next) => {
     console.log(JSON.stringify(`=== URLS[tag: ${tag}]: ${JSON.stringify(urls)}`));
     if (urls.length == 0) return reject('No data hit.');
     const promises = urls.map(url => ctx.get(url).then(r => {
-      const found = r.matchAll(regex);
+      const found = r.replace(/&([0-9]{3});/g, function(s){return String.fromCharCode([ParseInt(s)]);}).matchAll(regex);
       let data = "";
       for (const f of found) {
          data = data + f.toString().split(',')[0] + ' ';
