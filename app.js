@@ -46,9 +46,9 @@ router.get('/',  async (ctx, next) => {
   console.log("+++++++++ / ++++++++++");
 
   await ctx.render('top', {
-    query: 'site:thebase.in',
-    path: 'law',
-    regex: '[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}',
+    query: 'site:twitter.com',
+    path: '@benzookapi',
+    regex: '@[a-zA-Z0-9_]+ ',
     start: 1,
     tag: '',
     count: MAX_COUNT
